@@ -3,6 +3,9 @@ import pandas as pd
 from random import randint, sample, shuffle
 from random import seed
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.animation import FuncAnimation
+from itertools import count
 
 def main():
 
@@ -17,25 +20,40 @@ def main():
     def randNumber():
         return randint(1,49)
 
+    def pullNumbers():
+        return [randNumber(),randNumber(),randNumber(),randNumber(),randNumber(),randNumber()]
+
+    index = count()
+    
+    def animate(i):
+        lspulledNumbers = pullNumbers()
+        print(lspulledNumbers)
+        dfpulledNumbers.loc[len(dfpulledNumbers)] = lspulledNumbers
+        print(dfpulledNumbers)
+        dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
+        dfpulledNumbersStats['sum'] = dfpulledNumbersStats.sum(axis=1)
+        
+        plt.cla()
+        plt.plot(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],label='Anzahl')
+    
+    dfpulledNumbers = pd.DataFrame(columns=['1','2','3','4','5','6'])
+    lspulledNumbers = []
     dfPlayer = pd.DataFrame(columns=['Name','1','2','3','4','5','6','Gewinn','AnzGewinne'])
+
     y=0
     #Adjust Number of Players here
     while y < 1:
         dfnewPlayer = newPlayer()
         dfPlayer = pd.concat([dfPlayer,dfnewPlayer],ignore_index=True)
         y += 1
+        
     print(dfPlayer)
 
-    dfpulledNumbers = pd.DataFrame(columns=['1','2','3','4','5','6'])
-    y = 0
-    while y < 9:
-        dfpulledNumbers = pd.concat([pd.DataFrame([[randNumber(),randNumber(),randNumber(),randNumber(),randNumber(),randNumber()]],columns=dfpulledNumbers.columns),dfpulledNumbers],ignore_index=True)
-        y += 1
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.tight_layout()
+    plt.show()
 
-    dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
-    dfpulledNumbersStats['sum'] = dfpulledNumbersStats.sum(axis=1)
-    print(dfpulledNumbersStats)
-
+        
 main()
 
 
