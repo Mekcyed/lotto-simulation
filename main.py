@@ -36,8 +36,7 @@ def main():
                 x+=1
             if intGuessedNumbers > 0:
                 dfPlayer.at[index,str(intGuessedNumbers)+'er'] = dfPlayer.at[index,str(intGuessedNumbers)+'er'] + 1
-        print(lspulledNumbers)
-        print(dfPlayer)
+        
 
     index = count()
     
@@ -47,12 +46,17 @@ def main():
         dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
         dfpulledNumbersStats['sum'] = dfpulledNumbersStats.sum(axis=1)
         checkNumbers(lspulledNumbers)
+        plt.subplot(2, 1, 1)
         plt.cla()
-        plt.bar(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],tick_label=dfpulledNumbersStats.index)
+        plt.bar(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],tick_label=dfpulledNumbersStats.index,color='blue')
         plt.ylabel('# Häufigkeit')
         ymax= int(max(dfpulledNumbersStats['sum']))
         xmax= dfpulledNumbersStats[dfpulledNumbersStats['sum']==ymax].index.values
         plt.title(str(dfpulledNumbers.size) + ' gezogene Zahlen // Häufigste Zahl ' + str(xmax[0]))
+        plt.subplot(2, 1, 2)
+        plt.cla()
+        plt.table(cellText=dfPlayer.values,colLabels=dfPlayer.columns, loc='center')
+        plt.axis('off')
         
 
     dfpulledNumbers = pd.DataFrame(columns=['1','2','3','4','5','6'])
