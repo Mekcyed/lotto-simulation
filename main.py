@@ -32,24 +32,27 @@ def main():
         print(dfpulledNumbers)
         dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
         dfpulledNumbersStats['sum'] = dfpulledNumbersStats.sum(axis=1)
-        
         plt.cla()
-        plt.plot(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],label='Anzahl')
+        plt.bar(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],tick_label=dfpulledNumbersStats.index)
+        plt.ylabel('# Häufigkeit')
+        ymax= int(max(dfpulledNumbersStats['sum']))
+        xmax= dfpulledNumbersStats[dfpulledNumbersStats['sum']==ymax].index.values
+        plt.title('Verteilung gezogener Zahlen // Häufigste Zahl ' + str(xmax[0]))
+        
+
     
     dfpulledNumbers = pd.DataFrame(columns=['1','2','3','4','5','6'])
     lspulledNumbers = []
     dfPlayer = pd.DataFrame(columns=['Name','1','2','3','4','5','6','Gewinn','AnzGewinne'])
 
+    intPlayerNumber = int(input("Bitte Anzahl der Spieler*innen eingeben: "))
     y=0
-    #Adjust Number of Players here
-    while y < 1:
+    while y < intPlayerNumber:
         dfnewPlayer = newPlayer()
         dfPlayer = pd.concat([dfPlayer,dfnewPlayer],ignore_index=True)
         y += 1
-        
-    print(dfPlayer)
 
-    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    ani = FuncAnimation(plt.gcf(), animate, interval=1)
     plt.tight_layout()
     plt.show()
 
