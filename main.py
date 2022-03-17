@@ -33,7 +33,17 @@ def main():
                 x+=1
             if intGuessedNumbers > 0:
                 dfPlayer.at[index,str(intGuessedNumbers)+'er'] = dfPlayer.at[index,str(intGuessedNumbers)+'er'] + 1
-        
+                if intGuessedNumbers > 2:
+                    dfPlayer.at[index,'AnzGewinne'] = dfPlayer.at[index,'AnzGewinne'] + 1
+                    if intGuessedNumbers == 3:
+                        dfPlayer.at[index,'Gewinn'] = dfPlayer.at[index,'Gewinn'] + 10
+                    elif intGuessedNumbers == 4:
+                        dfPlayer.at[index,'Gewinn'] = dfPlayer.at[index,'Gewinn'] + 100
+                    elif intGuessedNumbers == 5:
+                        dfPlayer.at[index,'Gewinn'] = dfPlayer.at[index,'Gewinn'] + 1000
+                    elif intGuessedNumbers == 5:
+                        dfPlayer.at[index,'Gewinn'] = dfPlayer.at[index,'Gewinn'] + 10000    
+
 
     index = count()
     
