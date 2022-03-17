@@ -1,15 +1,14 @@
 from locale import normalize
 import pandas as pd
-from random import randint, sample, shuffle
-from random import seed
+import random
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from itertools import count
+import time
 
 
 def main():
-
     plt.rcParams["figure.autolayout"] = True
 
     def newPlayer():
@@ -20,11 +19,8 @@ def main():
     def enterNumbers(x):
         return int(input("Bitte " + str(x) + ". Zahl eingeben (zwischen 1 und 49): "))
 
-    def randNumber():
-        return randint(1,49)
-
     def pullNumbers():
-        return [randNumber(),randNumber(),randNumber(),randNumber(),randNumber(),randNumber()]
+        return random.sample(range(1,49),6)
 
     def checkNumbers(lspulledNumbers):
         for index, row in dfPlayer.iterrows():
@@ -41,6 +37,7 @@ def main():
     index = count()
     
     def animate(i):
+        timeStart = time.perf_counter()   
         lspulledNumbers = pullNumbers()
         dfpulledNumbers.loc[len(dfpulledNumbers)] = lspulledNumbers
         dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
@@ -52,7 +49,7 @@ def main():
         plt.ylabel('# Häufigkeit')
         ymax= int(max(dfpulledNumbersStats['sum']))
         xmax= dfpulledNumbersStats[dfpulledNumbersStats['sum']==ymax].index.values
-        plt.title(str(dfpulledNumbers.size) + ' gezogene Zahlen // Häufigste Zahl ' + str(xmax[0]))
+        plt.title(str(dfpulledNumbers.size) + ' gezogene Zahlen // Häufigste Zahl ' + str(xmax[0]) + '\nZiehung Dauer ' + "{:.2f}".format(time.perf_counter()-timeStart))
         plt.subplot(2, 1, 2)
         plt.cla()
         plt.table(cellText=dfPlayer.values,colLabels=dfPlayer.columns, loc='center')
@@ -69,7 +66,8 @@ def main():
         dfnewPlayer = newPlayer()
         dfPlayer = pd.concat([dfPlayer,dfnewPlayer],ignore_index=True)
         y += 1
-        
+
+
     fig = plt.figure(figsize=(12,5))
     ani = FuncAnimation(plt.gcf(), animate, interval=1)
     plt.tight_layout()
