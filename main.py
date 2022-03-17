@@ -10,6 +10,7 @@ import time
 
 def main():
     plt.rcParams["figure.autolayout"] = True
+    plt.rcParams['toolbar'] = 'None' 
 
     def newPlayer():
         playername = input("Bitte Name eingeben: ")
@@ -37,19 +38,22 @@ def main():
     index = count()
     
     def animate(i):
-        timeStart = time.perf_counter()   
-        lspulledNumbers = pullNumbers()
-        dfpulledNumbers.loc[len(dfpulledNumbers)] = lspulledNumbers
+        timeStart = time.perf_counter()
+        x=0
+        while x < 10:
+            lspulledNumbers = pullNumbers()
+            dfpulledNumbers.loc[len(dfpulledNumbers)] = lspulledNumbers
+            checkNumbers(lspulledNumbers)
+            x+=1
         dfpulledNumbersStats = dfpulledNumbers.apply(pd.Series.value_counts)
         dfpulledNumbersStats['sum'] = dfpulledNumbersStats.sum(axis=1)
-        checkNumbers(lspulledNumbers)
         plt.subplot(2, 1, 1)
         plt.cla()
         plt.bar(dfpulledNumbersStats.index,dfpulledNumbersStats['sum'],tick_label=dfpulledNumbersStats.index,color='blue')
         plt.ylabel('# Häufigkeit')
         ymax= int(max(dfpulledNumbersStats['sum']))
         xmax= dfpulledNumbersStats[dfpulledNumbersStats['sum']==ymax].index.values
-        plt.title(str(dfpulledNumbers.size) + ' gezogene Zahlen // Häufigste Zahl ' + str(xmax[0]) + '\nZiehung Dauer ' + "{:.2f}".format(time.perf_counter()-timeStart))
+        plt.title(str(len(dfpulledNumbers)) + ' Ziehungen // Häufigste Zahl ' + str(xmax[0]) + '\n Dauer letzte Ziehung ' + "{:.2f}".format(time.perf_counter()-timeStart))
         plt.subplot(2, 1, 2)
         plt.cla()
         plt.table(cellText=dfPlayer.values,colLabels=dfPlayer.columns, loc='center')
@@ -68,8 +72,8 @@ def main():
         y += 1
 
 
-    fig = plt.figure(figsize=(12,5))
-    ani = FuncAnimation(plt.gcf(), animate, interval=1)
+    fig = plt.figure(figsize=(12,9))
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
     plt.tight_layout()
     plt.show()
 
